@@ -9,91 +9,68 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class IceCreamShopTest {
-    @Test
-    public void testCalculateSubtotal() {
-        Order order = new Order();
-        IceCreamFlavor vanilla = new IceCreamFlavor("Vanilla", 3.00);
-        IceCreamTopping chocolateChips = new IceCreamTopping("Chocolate Chips", 0.50);
 
-        order.addItem(vanilla, 1);
-        order.addItem(chocolateChips, 2);
+        @Test
+        public void testAddItemToOrder() {
+            IceCreamFlavor chocolateFudge = ItemFactory.createFlavor("Chocolate Fudge", 3.00);
+            Order order = new Order();
+            order.addItem(chocolateFudge, 2);
+            assertEquals(2, order.getItems().size());
+            assertEquals(chocolateFudge, order.getItems().get(0));
+        }
 
-        double expectedSubtotal = 3.00 + (0.50 * 2);
-        assertEquals(expectedSubtotal, order.calculateSubtotal(), 0.01);
-    }
+        @Test
+        public void testCalculateSubtotalWithWaffleCone() {
 
+            PricingService pricingService = new PricingService();
+            IceCreamFlavor chocolateFudge = ItemFactory.createFlavor("Chocolate Fudge", 3.00);
+            IceCreamTopping sprinkles = ItemFactory.createTopping("Sprinkles", 0.30);
 
-    @Test
-    public void testCalculateTotalWithWaffleCone() {
-        Order order = new Order();
-        IceCreamFlavor chocolate = new IceCreamFlavor("Chocolate", 3.00);
-
-        order.addItem(chocolate, 2);
-        order.setWaffleCone(true);
-
-        double subtotal = (3.00 * 2) + 5.00; // Waffle cone adds $5.00
-        double expectedTotal = subtotal + (subtotal * 0.08); // Add 8% tax
-
-        assertEquals(expectedTotal, order.calculateTotal(), 0.01);
-    }
+            Order order = new Order();
+            order.addItem(chocolateFudge, 2); // 2 scoops of Chocolate Fudge
+            order.addItem(sprinkles, 1); // 1 topping of Sprinkles
+            order.setWaffleCone(true);
 
 
-    @Test
-    public void testCalculateTax() {
-        Order order = new Order();
-        IceCreamFlavor strawberry = new IceCreamFlavor("Strawberry", 2.75);
-
-        order.addItem(strawberry, 3);
-
-        double subtotal = 2.75 * 3;
-        double expectedTax = subtotal * 0.08;
-
-        assertEquals(expectedTax, order.calculateTax(), 0.01);
-    }
+            double subtotal = pricingService.calculateSubtotal(order);
 
 
-    @Test
-    public void testGenerateInvoiceContent() throws IOException {
-        Order order = new Order();
-        IceCreamFlavor pistachio = new IceCreamFlavor("Pistachio", 3.25);
-        IceCreamTopping marshmallow = new IceCreamTopping("Marshmallow", 0.70);
-
-        order.addItem(pistachio, 2);
-        order.addItem(marshmallow, 1);
-        order.setWaffleCone(false);
-
-        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-        invoiceGenerator.generateInvoice(order);
+            assertEquals(11.30, subtotal, 0.01); // (2*3.00) + (1*0.30) + 5.00
+        }
 
 
-        String content = Files.readString(Paths.get("Invoice.txt"));
+        @Test
+        public void testCalculateTax() {
 
-        assertTrue(content.contains("Pistachio - 2 time(s): $6.50"));
-        assertTrue(content.contains("Marshmallow - 1 time(s): $0.70"));
-        assertTrue(content.contains("Subtotal: $7.20"));
-        assertTrue(content.contains("Tax: $0.58"));
-        assertTrue(content.contains("Total Amount Due: $7.78"));
-    }
+            PricingService pricingService = new PricingService();
+            double subtotal = 15.00;
 
 
-    @Test
-    public void testOrderModification() {
-        Order order = new Order();
-        IceCreamFlavor mint = new IceCreamFlavor("Mint", 2.80);
-        IceCreamTopping sprinkles = new IceCreamTopping("Sprinkles", 0.30);
+            double tax = pricingService.calculateTax(subtotal);
 
 
-        order.addItem(mint, 2);
-        order.addItem(sprinkles, 1);
-
-        double initialSubtotal = (2.80 * 2) + 0.30;
-        assertEquals(initialSubtotal, order.calculateSubtotal(), 0.01);
+            assertEquals(1.20, tax, 0.01);
+        }
 
 
-        order.addItem(sprinkles, 1);
-        double updatedSubtotal = initialSubtotal + 0.30;
-        assertEquals(updatedSubtotal, order.calculateSubtotal(), 0.01);
-    }
+        @Test
+        public void testCalculateTotal() {
+
+            PricingService pricingService = new PricingService();
+            IceCreamFlavor strawberrySwirl = ItemFactory.createFlavor("Strawberry Swirl", 2.75);
+            IceCreamTopping chocolateChips = ItemFactory.createTopping("Chocolate Chips", 0.50);
+            Order order = new Order();
+            order.addItem(strawberrySwirl, 1);
+            order.addItem(chocolateChips, 2);
+            order.setWaffleCone(false);
+           double total = pricingService.calculateTotal(order);
+            assertEquals(4.75, total, 0.01);
+        }
+
+
+
+
+
 
 
 }

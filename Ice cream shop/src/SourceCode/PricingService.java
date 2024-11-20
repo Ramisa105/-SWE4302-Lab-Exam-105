@@ -1,6 +1,6 @@
 package SourceCode;
 
-class PricingService {
+public class PricingService {
     private static final double TAX_RATE = 0.08;
     private static final double WAFFLE_CONE_PRICE = 5.00;
 

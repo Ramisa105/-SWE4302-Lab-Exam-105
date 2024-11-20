@@ -1,6 +1,6 @@
 package SourceCode;
 
-class ItemFactory {
+public class ItemFactory {
     public static IceCreamFlavor createFlavor(String name, double price) {
         return new IceCreamFlavor(name, price);
     }
