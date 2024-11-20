@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class IceCreamShop {
     public static void main(String[] args) {
-
         IceCreamFlavor mintChocolateChip = ItemFactory.createFlavor("Mint Chocolate Chip", 2.80);
         IceCreamFlavor chocolateFudge = ItemFactory.createFlavor("Chocolate Fudge", 3.00);
         IceCreamFlavor strawberrySwirl = ItemFactory.createFlavor("Strawberry Swirl", 2.75);
         IceCreamFlavor pistachioDelight = ItemFactory.createFlavor("Pistachio Delight", 3.25);
-
 
         IceCreamTopping sprinkles = ItemFactory.createTopping("Sprinkles", 0.30);
         IceCreamTopping marshmallow = ItemFactory.createTopping("Marshmallow", 0.70);
@@ -28,11 +25,12 @@ public class IceCreamShop {
         items.add(freshStrawberries);
         items.add(freshStrawberries);
 
-
         Order order = OrderFactory.createOrder(items, true);
 
 
-        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+        PricingService pricingService = new PricingService();
+        InvoiceGenerator invoiceGenerator = new InvoiceGenerator(pricingService);
+
         try {
             invoiceGenerator.generateInvoice(order);
             System.out.println("Invoice generated successfully.");
@@ -41,4 +39,3 @@ public class IceCreamShop {
         }
     }
 }
-

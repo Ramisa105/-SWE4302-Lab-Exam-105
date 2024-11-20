@@ -8,6 +8,9 @@ public class Order {
     private boolean isWaffleCone;
 
     public void addItem(Item item, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero.");
+        }
         for (int i = 0; i < quantity; i++) {
             items.add(item);
         }
@@ -15,22 +18,6 @@ public class Order {
 
     public void setWaffleCone(boolean isWaffleCone) {
         this.isWaffleCone = isWaffleCone;
-    }
-
-    public double calculateSubtotal() {
-        double subtotal = items.stream().mapToDouble(Item::getPrice).sum();
-        if (isWaffleCone) {
-            subtotal += 5.00;
-        }
-        return subtotal;
-    }
-
-    public double calculateTax() {
-        return calculateSubtotal() * 0.08;
-    }
-
-    public double calculateTotal() {
-        return calculateSubtotal() + calculateTax();
     }
 
     public List<Item> getItems() {

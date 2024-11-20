@@ -2,7 +2,6 @@ package SourceCode;
 
 import java.util.List;
 
-// Factory for Order creation
 class OrderFactory {
     public static Order createOrder(List<Item> items, boolean isWaffleCone) {
         Order order = new Order();
