@@ -1,6 +1,6 @@
 package SourceCode;
 
-class IceCreamTopping implements Item {
+public class IceCreamTopping implements Item {
     private final String name;
     private final double price;
 

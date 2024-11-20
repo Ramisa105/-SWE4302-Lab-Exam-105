@@ -3,7 +3,7 @@ package SourceCode;
 import java.util.ArrayList;
 import java.util.List;
 
-class Order {
+public class Order {
     private final List<Item> items = new ArrayList<>();
     private boolean isWaffleCone;
 
