@@ -65,7 +65,7 @@ public class IceCreamShopTest {
         InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
         invoiceGenerator.generateInvoice(order);
 
-        
+
         String content = Files.readString(Paths.get("Invoice.txt"));
 
         assertTrue(content.contains("Pistachio - 2 time(s): $6.50"));
@@ -73,6 +73,26 @@ public class IceCreamShopTest {
         assertTrue(content.contains("Subtotal: $7.20"));
         assertTrue(content.contains("Tax: $0.58"));
         assertTrue(content.contains("Total Amount Due: $7.78"));
+    }
+
+
+    @Test
+    public void testOrderModification() {
+        Order order = new Order();
+        IceCreamFlavor mint = new IceCreamFlavor("Mint", 2.80);
+        IceCreamTopping sprinkles = new IceCreamTopping("Sprinkles", 0.30);
+
+
+        order.addItem(mint, 2);
+        order.addItem(sprinkles, 1);
+
+        double initialSubtotal = (2.80 * 2) + 0.30;
+        assertEquals(initialSubtotal, order.calculateSubtotal(), 0.01);
+
+
+        order.addItem(sprinkles, 1);
+        double updatedSubtotal = initialSubtotal + 0.30;
+        assertEquals(updatedSubtotal, order.calculateSubtotal(), 0.01);
     }
 
 
