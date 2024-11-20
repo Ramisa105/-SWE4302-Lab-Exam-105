@@ -6,6 +6,7 @@ import SourceCode.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class IceCreamShopTest {
@@ -67,10 +68,32 @@ public class IceCreamShopTest {
             assertEquals(4.75, total, 0.01);
         }
 
+        @Test
+        public void testInvoiceGeneration() throws IOException {
 
+            PricingService pricingService = new PricingService();
+            InvoiceGenerator invoiceGenerator = new InvoiceGenerator(pricingService);
 
+            IceCreamFlavor pistachioDelight = ItemFactory.createFlavor("Pistachio Delight", 3.25);
+            IceCreamTopping marshmallow = ItemFactory.createTopping("Marshmallow", 0.70);
 
+            Order order = new Order();
+            order.addItem(pistachioDelight, 1);
+            order.addItem(marshmallow, 1);
+            order.setWaffleCone(true);
 
+            invoiceGenerator.generateInvoice(order);
 
+            Path invoicePath = Path.of("Invoice.txt");
+            assertTrue(Files.exists(invoicePath));
+            String content = Files.readString(invoicePath);
+            assertTrue(content.contains("Pistachio Delight - 1 time(s): $3.25"));
+            assertTrue(content.contains("Marshmallow - 1 time(s): $0.70"));
+            assertTrue(content.contains("Waffle Cone: $5.00"));
+            assertTrue(content.contains("Subtotal: $9.25"));
+            assertTrue(content.contains("Tax: $0.74"));
+            assertTrue(content.contains("Total Amount Due: $9.99"));
+
+    }
 
 }
